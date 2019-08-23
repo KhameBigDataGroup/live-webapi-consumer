@@ -18,5 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('kafka_consumer.urls'))
+    path('', include('kafka_consumer.urls')),
+    path('', include('bitcoinapi.urls'))
 ]
