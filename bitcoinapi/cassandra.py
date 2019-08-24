@@ -29,7 +29,7 @@ def get_transactions_by_address(address):
                            (address,))
 
 
-def get_k_blocks(hash, k=1):
+def get_k_blocks(hash, k=10):
     if k <= 0:
         return []
     latest_block = get_blocks_by_hash([hash])[0]

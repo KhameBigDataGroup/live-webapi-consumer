@@ -37,7 +37,8 @@ def get_latest_blocks(r):
             'transactions': block.n_tx,
             'average_fee': 0,
             'size': block.size,
-            'weight': block.weight
+            'weight': block.weight,
+            'hash': block.hash
         })
 
     return JsonResponse({'items': items})
