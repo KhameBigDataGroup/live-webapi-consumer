@@ -102,5 +102,4 @@ STATIC_URL = '/static/'
 BTC_BLOCK_TOPIC = 'btc_block'
 BTC_TRANSACTION_TOPIC = 'btc_transactions'
 
-
 from .local_settings import *
