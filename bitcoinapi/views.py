@@ -9,7 +9,7 @@ from django.views.decorators.cache import cache_page
 
 from bitcoinapi.bitcoin import get_bitcoin_rpc_connection
 from bitcoinapi.cassandra import get_blocks_by_height, get_blocks_by_hash, get_transactions_by_height, \
-    get_transactions_by_hash, get_transactions_by_address, get_k_blocks
+    get_transactions_by_hash, get_transactions_by_address, get_k_blocks, get_latest_block_hash
 
 
 @cache_page(5 * 60)
@@ -25,8 +25,7 @@ def get_status(r):
 
 # @cache_page(5 * 60)
 def get_latest_blocks(r):
-    rpc_connection = get_bitcoin_rpc_connection()
-    latest_hash = rpc_connection.getbestblockhash()
+    latest_hash = get_latest_block_hash()
     blocks = get_k_blocks(latest_hash)
 
     items = []
