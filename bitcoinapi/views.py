@@ -1,4 +1,5 @@
 import json
+from time import time
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -6,8 +7,9 @@ from django.shortcuts import render
 # Create your views here.
 from django.views.decorators.cache import cache_page
 
-from bitcoinapi import get_bitcoin_rpc_connection
-from bitcoinapi.cassandra import get_blocks_by_height, get_blocks_by_hash, get_transactions_by_height, get_transactions_by_hash, get_transactions_by_address
+from bitcoinapi.bitcoin import get_bitcoin_rpc_connection
+from bitcoinapi.cassandra import get_blocks_by_height, get_blocks_by_hash, get_transactions_by_height, \
+    get_transactions_by_hash, get_transactions_by_address, get_k_blocks
 
 
 @cache_page(5 * 60)
@@ -24,18 +26,21 @@ def get_status(r):
 # @cache_page(5 * 60)
 def get_latest_blocks(r):
     rpc_connection = get_bitcoin_rpc_connection()
-    blockchain_info = rpc_connection.getblockchaininfo()
-    last_block_height = blockchain_info['blocks']
+    latest_hash = rpc_connection.getbestblockhash()
+    blocks = get_k_blocks(latest_hash)
 
-    block_heights = []
-    for i in range(10):
-        block_heights.append(last_block_height - i)
+    items = []
+    for block in blocks:
+        items.append({
+            'height': block.height,
+            'age': int(time() - int(block.time)),
+            'transactions': block.n_tx,
+            'average_fee': 0,
+            'size': block.size,
+            'weight': block.weight
+        })
 
-    blocks = get_blocks_by_height(block_heights)
-
-    return JsonResponse({
-        'blocks': blocks
-    })
+    return JsonResponse({'items': items})
 
 # @cache_page(5 * 60)
 def get_transactions(r, block_height):

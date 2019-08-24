@@ -27,3 +27,10 @@ def get_transactions_by_hash(hash):
 def get_transactions_by_address(address):
     return session.execute(session.prepare('SELECT * FROM transactions WHERE vout LIKE "%?%";'),
                            (address,))
+
+
+def get_k_blocks(hash, k=1):
+    if k <= 0:
+        return []
+    latest_block = get_blocks_by_hash([hash])[0]
+    return get_k_blocks(latest_block.previousblockhash, k - 1) + [latest_block]
