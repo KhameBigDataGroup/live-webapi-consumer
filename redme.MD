@@ -12,16 +12,6 @@
 
 ### Custom index
 
-#### vin
-``` 
-CREATE CUSTOM INDEX vin_details ON bitcoin.transactions (vin) USING 'org.apache.cassandra.index.sasi.SASIIndex'
-WITH OPTIONS = { 
-'mode': 'CONTAINS',
-'analyzer_class': 'org.apache.cassandra.index.sasi.analyzer.NonTokenizingAnalyzer',
-'case_sensitive': 'false'
-}; 
-```
-
 #### vout
 ``` 
 CREATE CUSTOM INDEX vout_details ON bitcoin.transactions (vout) USING 'org.apache.cassandra.index.sasi.SASIIndex'

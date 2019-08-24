@@ -24,4 +24,6 @@ def get_transactions_by_hash(hash):
     return session.execute(session.prepare('SELECT * FROM transactions where hash in ?'),
                            (ValueSequence(hash),))
 
-    
+def get_transactions_by_address(address):
+    return session.execute(session.prepare('SELECT * FROM transactions WHERE vout LIKE "%?%";'),
+                           (address,))

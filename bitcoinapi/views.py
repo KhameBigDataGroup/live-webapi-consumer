@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 
 from bitcoinapi import get_bitcoin_rpc_connection
-from bitcoinapi.cassandra import get_blocks_by_height, get_blocks_by_hash, get_transactions_by_height, get_transactions_by_hash
+from bitcoinapi.cassandra import get_blocks_by_height, get_blocks_by_hash, get_transactions_by_height, get_transactions_by_hash, get_transactions_by_address
 
 
 @cache_page(5 * 60)
@@ -56,12 +56,27 @@ def get_transactions(r, block_height):
         return JsonResponse({
             'transactions': []
         })
+
+# @cache_page(5 * 60)
+def get_transactions_address(r, address):
+    cassandra_transactions = get_transactions_by_address(address)
+    page = request.GET.get('page', '1')
+    pagination = request.GET.get('pagination', '50')
+
+    try:
+        start = (int(page) - 1) * int(pagination)
+        end = start + int(pagination)
+        transactions = cassandra_transactions[start:end]
+
+        return JsonResponse({
+            'transactions': transactions
+        })
+
+    except ValueError:
+        return JsonResponse({
+            'transactions': []
+        })
         
-
-    return JsonResponse({
-        'transactions': transactions
-    })
-
 # @cache_page(5 * 60)
 def get_transaction_by_hash(r, hash):
     transactions = get_transactions_by_hash([hash])
