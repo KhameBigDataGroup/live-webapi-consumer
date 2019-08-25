@@ -19,6 +19,7 @@ def get_status(r):
     rpc_connection = get_bitcoin_rpc_connection()
     chain_tx_stats = rpc_connection.getchaintxstats()
     blockchain_info = rpc_connection.getblockchaininfo()
+    blockchain_info.update(chain_tx_stats)
 
     return JsonResponse(blockchain_info)
 
