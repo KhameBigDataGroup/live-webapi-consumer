@@ -1,3 +1,5 @@
+import json
+
 from cassandra.cluster import Cluster
 from cassandra.query import ValueSequence
 
@@ -12,13 +14,16 @@ def get_blocks_by_height(ids):
     return session.execute(session.prepare('SELECT * FROM blocks where height in ?'),
                            (ValueSequence(ids),))
 
+
 def get_blocks_by_hash(hash):
     return session.execute(session.prepare('SELECT * FROM blocks where hash in ?'),
                            (ValueSequence(hash),))
 
+
 def get_transactions_by_height(ids):
     return session.execute(session.prepare('SELECT * FROM transactions where block_height in ?'),
                            (ValueSequence(ids),))
+
 
 def get_transactions_by_hash(hash):
     return session.execute(session.prepare('SELECT * FROM transactions where hash in ?'),
@@ -30,7 +35,14 @@ def get_transactions_by_address(address):
 
 
 def get_latest_block_hash():
-    return session.execute(session.prepare('SELECT max(height), hash FROM blocks'))[0].hash
+    return '000000000000051f68f43e9d455e72d9c4e4ce52e8a00c5e24c07340632405cb'
+
+
+def get_transactions_by_block_hash(hash):
+    data = json.loads(session.execute(session.prepare(
+        'SELECT data FROM blocks where hash=?'),
+        (hash,))[0].data[2:-1])
+    return data['tx']
 
 
 def get_k_blocks(hash, k=10):
