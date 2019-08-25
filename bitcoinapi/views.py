@@ -24,10 +24,15 @@ def get_status(r):
     return JsonResponse(blockchain_info)
 
 
-@cache_page(5 * 60)
+# @cache_page(5 * 60)
 def get_latest_blocks(r):
-    latest_hash = get_latest_block_hash()
-    blocks = get_k_blocks(latest_hash)
+    # latest_hash = get_latest_block_hash()
+    latest_hash = '000000000003ba27aa200b1cecaad478d2b00432346c3f1f3986da1afd33e506'
+    return get_blocks_from(r, latest_hash)
+
+
+def get_blocks_from(r, hash):
+    blocks = get_k_blocks(hash)
 
     items = []
     for block in blocks:
@@ -35,11 +40,13 @@ def get_latest_blocks(r):
             'height': block.height,
             'age': int(time() - int(block.time)),
             'transactions': block.n_tx,
-            'average_fee': average_fee(json.loads(block.data[2:-1])),
+            'average_fee': round(average_fee(json.loads(block.data[2:-1])) * 1000) / 1000,
             'size': block.size,
             'weight': block.weight,
-            'hash': block.hash
+            'hash': block.hash,
+            'previousblockhash': block.previousblockhash,
         })
+    items.reverse()
 
     return JsonResponse({'items': items})
 
@@ -101,3 +108,8 @@ def get_block(r, hash):
 
     block_data['total_fee'] = total_fee(block_data)
     return JsonResponse(block_data)
+
+
+def get_charts(r):
+    with open('./charts.json') as f:
+        return JsonResponse(json.load(f))
