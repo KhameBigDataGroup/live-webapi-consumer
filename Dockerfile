@@ -8,5 +8,3 @@ RUN pip install -r requirements.txt
 
 ADD . /code
 WORKDIR /code
-
-ENTRYPOINT [gun]
