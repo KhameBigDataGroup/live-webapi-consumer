@@ -23,8 +23,11 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': 'memcached:11211',
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://172.17.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
