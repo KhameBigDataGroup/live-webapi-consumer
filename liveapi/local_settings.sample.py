@@ -9,7 +9,7 @@ SECRET_KEY = '_0$5cs*7)c_&vhwhcqo+dimoz%1lv5!w0kn_ct=$(ao1ltdyae'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -38,4 +38,4 @@ KAFKA_GROUP_ID = ''
 
 BTC_KEYSPACE = 'bitcoin'
 CASSANDRA_HOST = '172.17.0.1'
-CASSANDRA_PORT = '9042'
+CASSANDRA_PORT = 9042
